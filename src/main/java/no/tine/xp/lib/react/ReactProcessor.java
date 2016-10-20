@@ -3,10 +3,17 @@ package no.tine.xp.lib.react;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.enonic.xp.resource.ResourceKey;
 import com.enonic.xp.resource.ResourceService;
@@ -61,16 +68,29 @@ public final class ReactProcessor
         String html = "";
         try {
         	html += "Currently running in " + new File(".").getAbsolutePath();
-	        nashorn.eval(new FileReader("/react.min.js"));
-	        nashorn.eval(new FileReader("/react-dom-server.min.js"));
+        	
+	        nashorn.eval(getFile("react.min.js"));
+	        nashorn.eval(getFile("react-dom-server.min.js"));
 		        
 	        html += (String)nashorn.eval("ReactDOMServer.renderToString(React.createElement('div', null, 'Hello World From Java!'));");
         }
-        catch(FileNotFoundException e) {
+        catch(IOException e) {
         	html += "Unable to find included file: " + e.getMessage();
         }
         
         return html;
+    }
+    
+    private String getFile(String filename) throws IOException {
+    	InputStream is = ReactProcessor.class.getClassLoader().getResourceAsStream(filename);
+    	List<String> lines;
+    	try {
+    		lines = IOUtils.readLines(is, "UTF-8");
+    	}
+    	finally {
+    		is.close();
+    	}
+    	return StringUtils.join(lines, "\n");
     }
 
     private RuntimeException handleError( final ScriptException e )
