@@ -23,12 +23,10 @@ app {
 
 repositories {
     jcenter()
-    maven {
-        url 'http://repo.enonic.com/public'
-    }
+    maven { url 'http://repo.enonic.com/public' }
 }
 
 dependencies {
-    compile('com.enonic.xp:core-api:6.7.2-RC3')
-    compile('com.enonic.xp:portal-api:6.7.2-RC3')
+    compile 'com.enonic.xp:core-api:6.7.2-RC3'
+    compile 'com.enonic.xp:portal-api:6.7.2-RC3'
 }

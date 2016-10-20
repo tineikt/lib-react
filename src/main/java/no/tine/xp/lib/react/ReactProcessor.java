@@ -1,5 +1,6 @@
 package no.tine.xp.lib.react;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -59,13 +60,14 @@ public final class ReactProcessor
 
         String html = "";
         try {
-	        nashorn.eval(new FileReader("react.min.js"));
-	        nashorn.eval(new FileReader("react-dom-server.min.js"));
-	
-	        html = (String)nashorn.eval("ReactDOMServer.renderToString(React.createElement('div', null, 'Hello World From Java!'));");
+        	html += "Currently running in " + new File(".").getAbsolutePath();
+	        nashorn.eval(new FileReader("/react.min.js"));
+	        nashorn.eval(new FileReader("/react-dom-server.min.js"));
+		        
+	        html += (String)nashorn.eval("ReactDOMServer.renderToString(React.createElement('div', null, 'Hello World From Java!'));");
         }
         catch(FileNotFoundException e) {
-        	html = "Unable to find included file: " + e.getMessage();
+        	html += "Unable to find included file: " + e.getMessage();
         }
         
         return html;
